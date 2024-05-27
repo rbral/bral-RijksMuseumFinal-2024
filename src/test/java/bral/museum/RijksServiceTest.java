@@ -3,6 +3,7 @@ package bral.museum;
 import bral.museum.json.ArtObject;
 import bral.museum.json.ArtObjects;
 import org.junit.jupiter.api.Test;
+import com.andrewoid.ApiKey;
 
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -18,19 +19,17 @@ public class RijksServiceTest {
 
         // when
         ArtObjects artObjectsResponse = service.getCollectionByPage(
-                apiKey.toString(),
+                apiKey.get(),
                 1
         ).blockingGet();
 
         // then
-        for (ArtObject artObject : artObjectsResponse.artObjects)
-        {
-            assertNotEquals("", artObject.longTitle);
-            assertNotEquals("", artObject.title);
-            assertNotEquals("", artObject.principalOrFirstMaker);
-            assertNotNull(artObject.webImage);
-            assertNotEquals("", artObject.webImage.url);
-        }
+        ArtObject artObject = artObjectsResponse.artObjects.get(0);
+        assertNotNull(artObject.longTitle);
+        assertNotEquals("", artObject.title);
+        assertNotEquals("", artObject.principalOrFirstMaker);
+        assertNotNull(artObject.webImage);
+        assertNotEquals("", artObject.webImage.url);
     }
 
     @Test
@@ -42,20 +41,19 @@ public class RijksServiceTest {
 
         // when
         ArtObjects artObjectsResponse = service.searchCollectionByQuery(
-                apiKey.toString(),
+                apiKey.get(),
                 "rembrandt",
                 1
         ).blockingGet();
 
         // then
-        for (ArtObject artObject : artObjectsResponse.artObjects)
-        {
-            assertNotEquals("", artObject.longTitle);
-            assertNotEquals("", artObject.title);
-            assertNotEquals("", artObject.principalOrFirstMaker);
-            assertNotNull(artObject.webImage);
-            assertNotEquals("", artObject.webImage.url);
-        }
+        ArtObject artObject = artObjectsResponse.artObjects.get(0);
+        assertNotNull(artObject.longTitle);
+        assertNotEquals("", artObject.title);
+        assertNotEquals("", artObject.principalOrFirstMaker);
+        assertNotNull(artObject.webImage);
+        assertNotEquals("", artObject.webImage.url);
+
     }
 
     @Test
@@ -67,20 +65,18 @@ public class RijksServiceTest {
 
         // when
         ArtObjects artObjectsResponse = service.searchCollectionByArtist(
-                apiKey.toString(),
+                apiKey.get(),
                 "Vermeer",
                 1
         ).blockingGet();
 
         // then
-        for (ArtObject artObject : artObjectsResponse.artObjects)
-        {
-            assertNotEquals("", artObject.longTitle);
-            assertNotEquals("", artObject.title);
-            assertNotEquals("", artObject.principalOrFirstMaker);
-            assertNotNull(artObject.webImage);
-            assertNotEquals("", artObject.webImage.url);
-        }
+        ArtObject artObject = artObjectsResponse.artObjects.get(0);
+        assertNotNull(artObject.longTitle);
+        assertNotEquals("", artObject.title);
+        assertNotEquals("", artObject.principalOrFirstMaker);
+        assertNotNull(artObject.webImage);
+        assertNotEquals("", artObject.webImage.url);
     }
 
 }

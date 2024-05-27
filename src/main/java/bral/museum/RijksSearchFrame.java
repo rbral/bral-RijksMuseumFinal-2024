@@ -4,6 +4,8 @@ import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import java.awt.*;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
 public class RijksSearchFrame extends JFrame
 {
@@ -39,23 +41,14 @@ public class RijksSearchFrame extends JFrame
         main.add(prevButton, BorderLayout.WEST);
         main.add(nextButton, BorderLayout.EAST);
 
-        searchField.getDocument().addDocumentListener((new DocumentListener() {
-
+        searchField.addKeyListener(new KeyAdapter() {
             @Override
-            public void insertUpdate(DocumentEvent e) {
-                performSearch();
+            public void keyPressed(KeyEvent e) {
+                if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+                    performSearch();
+                }
             }
-
-            @Override
-            public void removeUpdate(DocumentEvent e) {
-                performSearch();
-            }
-
-            @Override
-            public void changedUpdate(DocumentEvent e) {
-                performSearch();
-            }
-        }));
+        });
         nextButton.addActionListener(e -> nextPage());
         prevButton.addActionListener(e -> prevPage());
     }
