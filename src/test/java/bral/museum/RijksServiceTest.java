@@ -26,10 +26,10 @@ public class RijksServiceTest {
         // then
         ArtObject artObject = artObjectsResponse.artObjects.get(0);
         assertNotNull(artObject.longTitle);
-        assertNotEquals("", artObject.title);
-        assertNotEquals("", artObject.principalOrFirstMaker);
+        assertNotNull(artObject.title);
+        assertNotNull(artObject.principalOrFirstMaker);
         assertNotNull(artObject.webImage);
-        assertNotEquals("", artObject.webImage.url);
+        assertNotNull(artObject.webImage.url);
     }
 
     @Test
@@ -49,10 +49,10 @@ public class RijksServiceTest {
         // then
         ArtObject artObject = artObjectsResponse.artObjects.get(0);
         assertNotNull(artObject.longTitle);
-        assertNotEquals("", artObject.title);
-        assertNotEquals("", artObject.principalOrFirstMaker);
+        assertNotNull(artObject.title);
+        assertNotNull(artObject.principalOrFirstMaker);
         assertNotNull(artObject.webImage);
-        assertNotEquals("", artObject.webImage.url);
+        assertNotNull(artObject.webImage.url);
 
     }
 
@@ -73,10 +73,10 @@ public class RijksServiceTest {
         // then
         ArtObject artObject = artObjectsResponse.artObjects.get(0);
         assertNotNull(artObject.longTitle);
-        assertNotEquals("", artObject.title);
-        assertNotEquals("", artObject.principalOrFirstMaker);
+        assertNotNull(artObject.title);
+        assertNotNull(artObject.principalOrFirstMaker);
         assertNotNull(artObject.webImage);
-        assertNotEquals("", artObject.webImage.url);
+        assertNotNull(artObject.webImage.url);
     }
 
 }
