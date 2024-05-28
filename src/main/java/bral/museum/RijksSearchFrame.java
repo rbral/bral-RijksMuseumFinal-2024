@@ -14,6 +14,8 @@ import javax.swing.event.DocumentListener;
 import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.net.URL;
 
@@ -137,7 +139,14 @@ public class RijksSearchFrame extends JFrame
         for (ArtObject artObject : response.artObjects)
         {
             JLabel label = new JLabel();
-            label.setToolTipText(artObject.title + ", " + artObject.principalOrFirstMaker);
+            label.setToolTipText(artObject.title + " by " + artObject.principalOrFirstMaker);
+            label.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseClicked(MouseEvent e)
+                {
+                    new ImageFrame(artObject).setVisible(true);
+                }
+            });
             try
             {
                 URL url = new URL(artObject.webImage.url);
