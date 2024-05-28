@@ -3,6 +3,9 @@ package bral.museum;
 import bral.museum.json.ArtObject;
 import bral.museum.json.ArtObjects;
 import com.andrewoid.ApiKey;
+import hu.akarnokd.rxjava3.swing.SwingSchedulers;
+import io.reactivex.rxjava3.disposables.Disposable;
+import io.reactivex.rxjava3.schedulers.Schedulers;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -25,6 +28,8 @@ public class RijksSearchFrame extends JFrame
     private int currentPage = 1;
     private String currentQuery = "";
     private RijksService service;
+    private ApiKey apiKey;
+    ArtObjects artObjectsResponse;
 
     public RijksSearchFrame()
     {
@@ -32,7 +37,7 @@ public class RijksSearchFrame extends JFrame
         setSize(1100, 1000);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
 
-
+        apiKey = new ApiKey();
         service = new RijksServiceFactory().getService();
 
         mainPanel = new JPanel();
@@ -84,33 +89,55 @@ public class RijksSearchFrame extends JFrame
 
     private void performSearch() {
         currentQuery = searchField.getText();
-        //currentPage = 1;
+        currentPage = 1;
         loadResults();
-
     }
+
+
 
     private void loadResults()
     {
-        ApiKey apiKey = new ApiKey();
-        ArtObjects artObjectsResponse;
-        resultsPanel.removeAll();
-        if(currentQuery.isEmpty())
-        {
-            artObjectsResponse = service.getCollectionByPage(
-                    apiKey.get(),
-                    currentPage
-            ).blockingGet();
+
+        if (currentQuery == "") {
+            Disposable disposable = service.getCollectionByPage(
+                            apiKey.get(),
+                            currentPage
+                    )
+                    // tells Rx to request the data on a background Thread
+                    .subscribeOn(Schedulers.io())
+                    // tells Rx to handle the response on Swing's main Thread
+                    .observeOn(SwingSchedulers.edt())
+                    //.observeOn(AndroidSchedulers.mainThread()) // Instead use this on Android only
+                    .subscribe(
+                            (response) -> handleResponse(response),
+                            Throwable::printStackTrace);
+
         } else {
-            artObjectsResponse = service.searchCollectionByQuery(
+            Disposable disposable = service.searchCollectionByQuery(
                     apiKey.get(),
                     currentQuery,
                     currentPage
-            ).blockingGet();
-        }
+                    )
+                    // tells Rx to request the data on a background Thread
+                    .subscribeOn(Schedulers.io())
+                    // tells Rx to handle the response on Swing's main Thread
+                    .observeOn(SwingSchedulers.edt())
+                    //.observeOn(AndroidSchedulers.mainThread()) // Instead use this on Android only
+                    .subscribe(
+                            (response) -> handleResponse(response),
+                            Throwable::printStackTrace);
 
-        for (ArtObject artObject : artObjectsResponse.artObjects)
+        }
+    }
+
+    private void handleResponse(ArtObjects response) {
+        resultsPanel.removeAll();
+        resultsPanel.revalidate();
+        resultsPanel.repaint();
+        for (ArtObject artObject : response.artObjects)
         {
             JLabel label = new JLabel();
+            label.setToolTipText(artObject.title + ", " + artObject.principalOrFirstMaker);
             try
             {
                 URL url = new URL(artObject.webImage.url);
@@ -125,8 +152,6 @@ public class RijksSearchFrame extends JFrame
             resultsPanel.add(label);
         }
         repaint();
-
-
     }
 
 
