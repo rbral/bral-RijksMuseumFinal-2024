@@ -31,7 +31,7 @@ public class RijksSearchFrame extends JFrame
     private String currentQuery = "";
     private RijksService service;
     private ApiKey apiKey;
-    ArtObjects artObjectsResponse;
+    private ArtObjects artObjectsResponse;
 
     public RijksSearchFrame()
     {
@@ -100,7 +100,7 @@ public class RijksSearchFrame extends JFrame
     private void loadResults()
     {
 
-        if (currentQuery == "") {
+        if (currentQuery.isEmpty()) {
             Disposable disposable = service.getCollectionByPage(
                             apiKey.get(),
                             currentPage
@@ -160,7 +160,6 @@ public class RijksSearchFrame extends JFrame
             }
             resultsPanel.add(label);
         }
-        repaint();
     }
 
 
